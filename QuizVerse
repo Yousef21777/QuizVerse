@@ -1,0 +1,2783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>QuizVerse</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+
+    background:
+        radial-gradient(circle at 20% 20%, #5f3dc4 0, transparent 30%),
+        radial-gradient(circle at 80% 30%, #00b8d9 0, transparent 30%),
+        radial-gradient(circle at 50% 90%, #9b59b6 0, transparent 30%),
+        #10142f;
+}
+
+/* HEADER */
+
+header {
+    height: 82px;
+
+    background: rgba(10, 12, 35, .82);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,.12);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 35px;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 20;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 900;
+
+    background: linear-gradient(90deg,#7c5cff,#00e5ff);
+
+    -webkit-background-clip: text;
+
+    color: transparent;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-avatar {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 15px;
+
+    background: linear-gradient(135deg,#6c5ce7,#00cec9);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.player-level {
+    color: #aeb6d9;
+    font-size: 13px;
+}
+
+.coins {
+    background: linear-gradient(135deg,#f9ca24,#f0932b);
+
+    color: #241600;
+
+    padding: 12px 20px;
+
+    border-radius: 16px;
+
+    font-weight: 900;
+
+    box-shadow: 0 5px 20px rgba(249,202,36,.25);
+}
+
+/* NAVIGATION */
+
+nav {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    padding: 25px 15px;
+}
+
+nav button {
+    border: 1px solid rgba(255,255,255,.1);
+
+    background: rgba(255,255,255,.08);
+
+    color: white;
+
+    padding: 13px 22px;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+nav button:hover {
+    transform: translateY(-3px);
+
+    background: rgba(255,255,255,.16);
+}
+
+nav button.active {
+    background: linear-gradient(135deg,#6c5ce7,#00cec9);
+
+    border-color: transparent;
+
+    box-shadow: 0 8px 25px rgba(0,206,201,.2);
+}
+
+/* PAGES */
+
+.page {
+    display: none;
+
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 10px 25px 60px;
+}
+
+.active-page {
+    display: block;
+}
+
+/* HOME */
+
+.hero {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,.25),
+            rgba(0,229,255,.12)
+        );
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    border-radius: 30px;
+
+    padding: 55px 30px;
+
+    text-align: center;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+
+.hero h1 {
+    font-size: 64px;
+
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: #b8c0df;
+
+    font-size: 19px;
+}
+
+.play-button {
+    margin-top: 30px;
+
+    border: none;
+
+    padding: 18px 50px;
+
+    border-radius: 18px;
+
+    color: white;
+
+    font-size: 21px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    background: linear-gradient(135deg,#7c5cff,#00c8ff);
+
+    box-shadow: 0 12px 35px rgba(0,200,255,.25);
+
+    transition: .2s;
+}
+
+.play-button:hover {
+    transform: scale(1.05);
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+
+    grid-template-columns: repeat(3,1fr);
+
+    gap: 15px;
+
+    margin-top: 25px;
+}
+
+.stat {
+    background: rgba(255,255,255,.07);
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 30px;
+}
+
+.stat-number {
+    font-size: 24px;
+
+    font-weight: 900;
+
+    margin-top: 5px;
+}
+
+/* QUIZ */
+
+.quiz-box {
+    background: rgba(255,255,255,.08);
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    border-radius: 28px;
+
+    padding: 35px;
+
+    text-align: center;
+}
+
+.quiz-box h1 {
+    margin-bottom: 10px;
+}
+
+.quiz-box h2 {
+    margin-top: 15px;
+}
+
+/* SELECT */
+
+.grade-select {
+    margin: 20px;
+
+    padding: 15px;
+
+    border-radius: 14px;
+
+    font-size: 18px;
+
+    width: 220px;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+/* SUBJECT BUTTONS */
+
+.subject-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+    margin-top: 15px;
+}
+
+.subject-button {
+    border: none;
+
+    padding: 18px 30px;
+
+    border-radius: 16px;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.subject-button:hover {
+    transform: translateY(-5px) scale(1.03);
+}
+
+.math-button {
+    background: linear-gradient(135deg,#3498db,#2980b9);
+}
+
+.science-button {
+    background: linear-gradient(135deg,#2ecc71,#16a085);
+}
+
+.english-button {
+    background: linear-gradient(135deg,#9b59b6,#8e44ad);
+}
+
+/* QUESTION */
+
+.question {
+    font-size: 32px;
+
+    margin: 30px 0;
+}
+
+.answers {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+}
+
+.answer {
+    border: none;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.answer:hover {
+    transform: scale(1.03);
+}
+
+.answer:nth-child(1) {
+    background: #e74c3c;
+}
+
+.answer:nth-child(2) {
+    background: #3498db;
+}
+
+.answer:nth-child(3) {
+    background: #9b59b6;
+}
+
+.answer:nth-child(4) {
+    background: #2ecc71;
+}
+
+.answer:disabled {
+    opacity: .7;
+
+    cursor: not-allowed;
+}
+
+#quizMessage {
+    min-height: 30px;
+}
+
+/* SHOP */
+
+.page-title {
+    text-align: center;
+
+    font-size: 42px;
+
+    margin-bottom: 10px;
+}
+
+.page-subtitle {
+    text-align: center;
+
+    color: #aeb6d9;
+
+    margin-bottom: 30px;
+}
+
+.shop-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3,1fr);
+
+    gap: 20px;
+}
+
+.shop-card {
+    background: rgba(255,255,255,.07);
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    border-radius: 25px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    transition: .25s;
+}
+
+.shop-card:hover {
+    transform: translateY(-7px);
+
+    background: rgba(255,255,255,.11);
+}
+
+.chest-icon {
+    font-size: 90px;
+
+    margin: 15px;
+}
+
+.shop-card p {
+    color: #adb5d4;
+}
+
+.buy-button {
+    margin-top: 18px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    padding: 13px 25px;
+
+    background: #2ecc71;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+/* AVATARS */
+
+.avatar-grid {
+    display: grid;
+
+    grid-template-columns: repeat(5,1fr);
+
+    gap: 15px;
+}
+
+.avatar-card {
+    background: rgba(255,255,255,.07);
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    border-radius: 20px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    transition: .2s;
+}
+
+.avatar-card:hover {
+    transform: translateY(-5px);
+}
+
+.avatar-big {
+    font-size: 65px;
+
+    margin: 5px;
+}
+
+.rarity {
+    font-size: 12px;
+
+    font-weight: bold;
+
+    margin: 5px;
+}
+
+.common {
+    color: #dfe6e9;
+}
+
+.rare {
+    color: #3498db;
+}
+
+.epic {
+    color: #a55eea;
+}
+
+.legendary {
+    color: #f1c40f;
+}
+
+.mythic {
+    color: #ff4757;
+}
+
+.avatar-card button {
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 8px 13px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+/* CHEST OVERLAY */
+
+.overlay {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(5,7,25,.94);
+
+    backdrop-filter: blur(10px);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 100;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.opening {
+    text-align: center;
+}
+
+.opening h2 {
+    font-size: 30px;
+
+    margin-bottom: 20px;
+}
+
+.big-chest {
+    font-size: 160px;
+
+    animation: shake .12s infinite;
+}
+
+@keyframes shake {
+
+    0% {
+        transform: rotate(-6deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(6deg) scale(1.04);
+    }
+
+    100% {
+        transform: rotate(-6deg) scale(1);
+    }
+
+}
+
+.flash {
+    animation: flash 1s infinite alternate;
+}
+
+@keyframes flash {
+
+    from {
+        filter: drop-shadow(0 0 10px gold);
+
+        transform: scale(1);
+    }
+
+    to {
+        filter:
+            drop-shadow(0 0 40px gold)
+            drop-shadow(0 0 80px white);
+
+        transform: scale(1.2);
+    }
+
+}
+
+/* REWARD */
+
+.reward {
+    display: none;
+
+    text-align: center;
+
+    animation: rewardIn .7s ease;
+}
+
+@keyframes rewardIn {
+
+    from {
+        transform: scale(.3) rotate(-10deg);
+
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) rotate(0);
+
+        opacity: 1;
+    }
+
+}
+
+.reward-avatar {
+    font-size: 170px;
+}
+
+.reward h1 {
+    font-size: 50px;
+
+    margin: 10px;
+}
+
+.reward-rarity {
+    font-size: 22px;
+
+    font-weight: bold;
+}
+
+.close-button {
+    margin-top: 25px;
+
+    padding: 13px 35px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    background: #7c5cff;
+
+    color: white;
+
+    font-weight: bold;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:800px) {
+
+    .avatar-grid {
+        grid-template-columns: repeat(3,1fr);
+    }
+
+    .shop-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 45px;
+    }
+
+}
+
+@media(max-width:550px) {
+
+    header {
+        padding: 0 12px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .profile {
+        display: none;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .answers {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        flex-wrap: wrap;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<header>
+
+    <div class="profile">
+
+        <div class="profile-avatar" id="profileAvatar">
+            🙂
+        </div>
+
+        <div>
+
+            <div class="player-name">
+                Player
+            </div>
+
+            <div class="player-level">
+                Level <span id="level">1</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="logo">
+        🌌 QUIZVERSE
+    </div>
+
+
+    <div class="coins">
+        💰 <span id="coinDisplay">500</span>
+    </div>
+
+</header>
+
+
+<!-- ========================= -->
+<!-- NAVIGATION -->
+<!-- ========================= -->
+
+<nav>
+
+    <button
+        class="active"
+        onclick="showPage('home',this)">
+        🏠 Home
+    </button>
+
+    <button
+        onclick="showPage('quiz',this)">
+        🎮 Play
+    </button>
+
+    <button
+        onclick="showPage('shop',this)">
+        🛍️ Shop
+    </button>
+
+    <button
+        onclick="showPage('avatars',this)">
+        🧑 Avatars
+    </button>
+
+</nav>
+
+
+<!-- ========================= -->
+<!-- HOME -->
+<!-- ========================= -->
+
+<div id="home" class="page active-page">
+
+    <div class="hero">
+
+        <h1>
+            🌌 QuizVerse
+        </h1>
+
+        <p>
+            Test your knowledge. Earn coins. Unlock awesome avatars!
+        </p>
+
+        <button
+            class="play-button"
+            onclick="openQuiz()">
+
+            🚀 PLAY QUIZ
+
+        </button>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <div
+                class="stat-number"
+                id="xpDisplay">
+
+                0
+
+            </div>
+
+            XP
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🧑
+            </div>
+
+            <div
+                class="stat-number"
+                id="skinCount">
+
+                1
+
+            </div>
+
+            Skins
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🏆
+            </div>
+
+            <div
+                class="stat-number"
+                id="gamesPlayed">
+
+                0
+
+            </div>
+
+            Games
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- QUIZ PAGE -->
+<!-- ========================= -->
+
+<div id="quiz" class="page">
+
+
+    <!-- QUIZ SETUP -->
+
+    <div
+        id="quizSetup"
+        class="quiz-box">
+
+        <h1>
+            🎮 QuizVerse Quiz
+        </h1>
+
+        <p style="color:#aeb6d9;margin:15px;">
+
+            Choose your grade and subject!
+
+        </p>
+
+
+        <h2>
+            🎓 Choose Grade
+        </h2>
+
+
+        <select
+            id="gradeSelect"
+            class="grade-select">
+
+            <option value="1">
+                Grade 1
+            </option>
+
+            <option value="2">
+                Grade 2
+            </option>
+
+            <option value="3">
+                Grade 3
+            </option>
+
+            <option value="4">
+                Grade 4
+            </option>
+
+            <option value="5">
+                Grade 5
+            </option>
+
+            <option value="6">
+                Grade 6
+            </option>
+
+            <option value="7">
+                Grade 7
+            </option>
+
+            <option value="8">
+                Grade 8
+            </option>
+
+            <option value="9">
+                Grade 9
+            </option>
+
+            <option value="10">
+                Grade 10
+            </option>
+
+        </select>
+
+
+        <h2>
+            📚 Choose Subject
+        </h2>
+
+
+        <div class="subject-buttons">
+
+            <button
+                class="subject-button math-button"
+                onclick="startQuiz('Math')">
+
+                ➗ Math
+
+            </button>
+
+
+            <button
+                class="subject-button science-button"
+                onclick="startQuiz('Science')">
+
+                🧪 Science
+
+            </button>
+
+
+            <button
+                class="subject-button english-button"
+                onclick="startQuiz('English')">
+
+                📚 English
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTUAL QUIZ -->
+
+    <div
+        id="quizGame"
+        class="quiz-box"
+        style="display:none;">
+
+        <h2 id="quizTitle">
+            Math • Grade 1
+        </h2>
+
+        <p style="color:#aeb6d9;margin-top:10px;">
+
+            Question
+            <span id="questionNumber">
+                1
+            </span>
+
+        </p>
+
+
+        <div
+            class="question"
+            id="question">
+
+            Question goes here
+
+        </div>
+
+
+        <div class="answers">
+
+            <button
+                class="answer"
+                onclick="answer(0)"
+                id="answer0">
+
+                Answer 1
+
+            </button>
+
+
+            <button
+                class="answer"
+                onclick="answer(1)"
+                id="answer1">
+
+                Answer 2
+
+            </button>
+
+
+            <button
+                class="answer"
+                onclick="answer(2)"
+                id="answer2">
+
+                Answer 3
+
+            </button>
+
+
+            <button
+                class="answer"
+                onclick="answer(3)"
+                id="answer3">
+
+                Answer 4
+
+            </button>
+
+        </div>
+
+
+        <br>
+
+        <h3 id="quizMessage"></h3>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- SHOP -->
+<!-- ========================= -->
+
+<div id="shop" class="page">
+
+    <h1 class="page-title">
+        🛍️ Item Shop
+    </h1>
+
+    <p class="page-subtitle">
+        Open mystery chests to discover new skins!
+    </p>
+
+
+    <div class="shop-grid">
+
+
+        <div class="shop-card">
+
+            <div class="chest-icon">
+                🎁
+            </div>
+
+            <h2>
+                Basic Chest
+            </h2>
+
+            <p>
+                Contains Common, Rare and Epic skins.
+            </p>
+
+            <button
+                class="buy-button"
+                onclick="buyChest('basic')">
+
+                💰 100
+
+            </button>
+
+        </div>
+
+
+        <div class="shop-card">
+
+            <div class="chest-icon">
+                💎
+            </div>
+
+            <h2>
+                Epic Chest
+            </h2>
+
+            <p>
+                Better chance of Epic skins.
+            </p>
+
+            <button
+                class="buy-button"
+                onclick="buyChest('epic')">
+
+                💰 250
+
+            </button>
+
+        </div>
+
+
+        <div class="shop-card">
+
+            <div class="chest-icon">
+                👑
+            </div>
+
+            <h2>
+                Legend Chest
+            </h2>
+
+            <p>
+                Contains rare and legendary skins.
+            </p>
+
+            <button
+                class="buy-button"
+                onclick="buyChest('legend')">
+
+                💰 500
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- AVATARS -->
+<!-- ========================= -->
+
+<div id="avatars" class="page">
+
+    <h1 class="page-title">
+        🧑 Avatar Collection
+    </h1>
+
+    <p class="page-subtitle">
+        Collect and equip your favorite skins.
+    </p>
+
+    <div
+        class="avatar-grid"
+        id="avatarGrid">
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- CHEST ANIMATION -->
+<!-- ========================= -->
+
+<div
+    class="overlay"
+    id="chestOverlay">
+
+
+    <div
+        class="opening"
+        id="opening">
+
+        <h2>
+            🎁 Opening Chest...
+        </h2>
+
+        <div
+            class="big-chest"
+            id="bigChest">
+
+            🎁
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="reward"
+        id="reward">
+
+        <div
+            class="reward-avatar"
+            id="rewardAvatar">
+
+            🦊
+
+        </div>
+
+
+        <h1 id="rewardName">
+            Fox
+        </h1>
+
+
+        <div
+            class="reward-rarity"
+            id="rewardRarity">
+
+            RARE
+
+        </div>
+
+
+        <p>
+            ✨ NEW AVATAR! ✨
+        </p>
+
+
+        <button
+            class="close-button"
+            onclick="closeChest()">
+
+            Awesome!
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ==========================================
+// AVATARS
+// ==========================================
+
+const skins = [
+
+    {name:"Default",emoji:"🙂",rarity:"Common"},
+    {name:"Cool Kid",emoji:"😎",rarity:"Common"},
+    {name:"Happy",emoji:"😀",rarity:"Common"},
+    {name:"Robot",emoji:"🤖",rarity:"Common"},
+    {name:"Monkey",emoji:"🐵",rarity:"Common"},
+    {name:"Penguin",emoji:"🐧",rarity:"Common"},
+    {name:"Cat",emoji:"🐱",rarity:"Common"},
+    {name:"Dog",emoji:"🐶",rarity:"Common"},
+
+    {name:"Fox",emoji:"🦊",rarity:"Rare"},
+    {name:"Alien",emoji:"👽",rarity:"Rare"},
+    {name:"Ninja",emoji:"🥷",rarity:"Rare"},
+    {name:"Wizard",emoji:"🧙",rarity:"Rare"},
+    {name:"Pirate",emoji:"🏴‍☠️",rarity:"Rare"},
+    {name:"Detective",emoji:"🕵️",rarity:"Rare"},
+    {name:"Astronaut",emoji:"🧑‍🚀",rarity:"Rare"},
+    {name:"Cowboy",emoji:"🤠",rarity:"Rare"},
+
+    {name:"Dragon",emoji:"🐉",rarity:"Epic"},
+    {name:"Ghost",emoji:"👻",rarity:"Epic"},
+    {name:"Vampire",emoji:"🧛",rarity:"Epic"},
+    {name:"Mermaid",emoji:"🧜",rarity:"Epic"},
+    {name:"Phoenix",emoji:"🔥",rarity:"Epic"},
+    {name:"Demon",emoji:"😈",rarity:"Epic"},
+    {name:"Superhero",emoji:"🦸",rarity:"Epic"},
+    {name:"Werewolf",emoji:"🐺",rarity:"Epic"},
+
+    {name:"King",emoji:"🤴",rarity:"Legendary"},
+    {name:"Queen",emoji:"👸",rarity:"Legendary"},
+    {name:"Golden Robot",emoji:"🤖",rarity:"Legendary"},
+    {name:"Space King",emoji:"👑",rarity:"Legendary"},
+    {name:"Galaxy",emoji:"🌌",rarity:"Legendary"},
+    {name:"Lightning",emoji:"⚡",rarity:"Legendary"},
+    {name:"Diamond",emoji:"💎",rarity:"Legendary"},
+    {name:"Crown",emoji:"👑",rarity:"Legendary"},
+
+    {name:"Cosmic Dragon",emoji:"🐲",rarity:"Mythic"},
+    {name:"Dark Lord",emoji:"🖤",rarity:"Mythic"},
+    {name:"Golden Phoenix",emoji:"🌟",rarity:"Mythic"},
+    {name:"Void Walker",emoji:"🌑",rarity:"Mythic"},
+    {name:"Galaxy God",emoji:"🌠",rarity:"Mythic"},
+    {name:"Infinity",emoji:"♾️",rarity:"Mythic"},
+    {name:"Starborn",emoji:"✨",rarity:"Mythic"},
+    {name:"Quiz Master",emoji:"🧠",rarity:"Mythic"}
+
+];
+
+
+// ==========================================
+// PLAYER DATA
+// ==========================================
+
+let coins =
+    Number(localStorage.getItem("qvCoins")) || 500;
+
+let xp =
+    Number(localStorage.getItem("qvXP")) || 0;
+
+let games =
+    Number(localStorage.getItem("qvGames")) || 0;
+
+let owned =
+    JSON.parse(localStorage.getItem("qvOwned"))
+    || ["Default"];
+
+let selected =
+    localStorage.getItem("qvSelected")
+    || "Default";
+
+
+// ==========================================
+// UPDATE UI
+// ==========================================
+
+function updateUI() {
+
+    document.getElementById("coinDisplay").textContent =
+        coins;
+
+    document.getElementById("xpDisplay").textContent =
+        xp;
+
+    document.getElementById("gamesPlayed").textContent =
+        games;
+
+    document.getElementById("skinCount").textContent =
+        owned.length;
+
+    document.getElementById("level").textContent =
+        Math.floor(xp / 100) + 1;
+
+
+    const current =
+        skins.find(s => s.name === selected);
+
+
+    if (current) {
+
+        document.getElementById("profileAvatar")
+            .textContent = current.emoji;
+
+    }
+
+
+    localStorage.setItem("qvCoins",coins);
+
+    localStorage.setItem("qvXP",xp);
+
+    localStorage.setItem("qvGames",games);
+
+}
+
+
+// ==========================================
+// PAGE SWITCHING
+// ==========================================
+
+function showPage(id,button) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(p =>
+            p.classList.remove("active-page")
+        );
+
+
+    document
+        .getElementById(id)
+        .classList.add("active-page");
+
+
+    document
+        .querySelectorAll("nav button")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+
+    button.classList.add("active");
+
+
+    if (id === "avatars") {
+
+        renderAvatars();
+
+    }
+
+}
+
+
+// ==========================================
+// OPEN QUIZ
+// ==========================================
+
+function openQuiz() {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(p =>
+            p.classList.remove("active-page")
+        );
+
+
+    document
+        .getElementById("quiz")
+        .classList.add("active-page");
+
+
+    document.getElementById("quizSetup")
+        .style.display = "block";
+
+
+    document.getElementById("quizGame")
+        .style.display = "none";
+
+}
+
+
+// ==========================================
+// QUESTION DATABASE
+// ==========================================
+
+const questionDatabase = {
+
+
+Math: {
+
+
+1: [
+
+{
+q:"What is 5 + 3?",
+a:["6","7","8","9"],
+c:2
+},
+
+{
+q:"What is 10 - 4?",
+a:["5","6","7","8"],
+c:1
+},
+
+{
+q:"How many sides does a triangle have?",
+a:["2","3","4","5"],
+c:1
+}
+
+],
+
+
+2: [
+
+{
+q:"What is 7 + 8?",
+a:["13","14","15","16"],
+c:2
+},
+
+{
+q:"What is 20 - 7?",
+a:["11","12","13","14"],
+c:2
+},
+
+{
+q:"What is 5 × 2?",
+a:["7","8","10","12"],
+c:2
+}
+
+],
+
+
+3: [
+
+{
+q:"What is 8 × 7?",
+a:["48","54","56","64"],
+c:2
+},
+
+{
+q:"What is 45 ÷ 5?",
+a:["7","8","9","10"],
+c:2
+},
+
+{
+q:"What is 25 + 37?",
+a:["52","62","72","82"],
+c:1
+}
+
+],
+
+
+4: [
+
+{
+q:"What is 12 × 6?",
+a:["62","72","82","92"],
+c:1
+},
+
+{
+q:"What is 144 ÷ 12?",
+a:["10","11","12","13"],
+c:2
+},
+
+{
+q:"What is 25 × 4?",
+a:["50","75","100","125"],
+c:2
+}
+
+],
+
+
+5: [
+
+{
+q:"What is 3/4 + 1/4?",
+a:["1/2","1","1 1/4","2"],
+c:1
+},
+
+{
+q:"What is 25% of 100?",
+a:["10","20","25","50"],
+c:2
+},
+
+{
+q:"What is 12.5 + 7.5?",
+a:["18","19","20","21"],
+c:2
+}
+
+],
+
+
+6: [
+
+{
+q:"What is 15 × 12?",
+a:["150","170","180","200"],
+c:2
+},
+
+{
+q:"What is √81?",
+a:["7","8","9","10"],
+c:2
+},
+
+{
+q:"What is 3/5 as a decimal?",
+a:["0.3","0.5","0.6","0.8"],
+c:2
+}
+
+],
+
+
+7: [
+
+{
+q:"Solve: 3x = 21",
+a:["5","6","7","8"],
+c:2
+},
+
+{
+q:"What is 2³?",
+a:["4","6","8","9"],
+c:2
+},
+
+{
+q:"What is 15% of 200?",
+a:["20","25","30","35"],
+c:2
+}
+
+],
+
+
+8: [
+
+{
+q:"Solve: 2x + 4 = 14",
+a:["4","5","6","7"],
+c:1
+},
+
+{
+q:"What is the area of a rectangle that is 8 cm × 5 cm?",
+a:["13 cm²","26 cm²","40 cm²","80 cm²"],
+c:2
+},
+
+{
+q:"What is 3² + 4²?",
+a:["12","20","25","49"],
+c:2
+}
+
+],
+
+
+9: [
+
+{
+q:"Solve: x² = 49",
+a:["x = 7 only","x = -7 only","x = ±7","x = 49"],
+c:2
+},
+
+{
+q:"What is the slope of y = 3x + 2?",
+a:["2","3","5","6"],
+c:1
+},
+
+{
+q:"Solve: 2x - 6 = 10",
+a:["6","7","8","9"],
+c:2
+}
+
+],
+
+
+10: [
+
+{
+q:"What is the derivative of x²?",
+a:["x","2x","x²","2"],
+c:1
+},
+
+{
+q:"Solve: x² - 9 = 0",
+a:["x = 3","x = -3","x = ±3","x = 9"],
+c:2
+},
+
+{
+q:"What is the value of 2⁵?",
+a:["16","24","32","64"],
+c:2
+}
+
+]
+
+},
+
+
+
+// ==========================================
+// SCIENCE
+// ==========================================
+
+Science: {
+
+
+1: [
+
+{
+q:"Which animal says 'moo'?",
+a:["Dog","Cow","Cat","Bird"],
+c:1
+},
+
+{
+q:"What do plants need from the Sun?",
+a:["Light","Music","Snow","Rocks"],
+c:0
+}
+
+],
+
+
+2: [
+
+{
+q:"Which part of a plant takes in water?",
+a:["Flower","Root","Fruit","Seed"],
+c:1
+},
+
+{
+q:"Which sense do you use with your eyes?",
+a:["Hearing","Touch","Sight","Taste"],
+c:2
+}
+
+],
+
+
+3: [
+
+{
+q:"Which organ helps you breathe?",
+a:["Heart","Brain","Lungs","Stomach"],
+c:2
+},
+
+{
+q:"Which state of matter is ice?",
+a:["Liquid","Gas","Solid","Plasma"],
+c:2
+}
+
+],
+
+
+4: [
+
+{
+q:"What is the closest star to Earth?",
+a:["The Moon","The Sun","Mars","Jupiter"],
+c:1
+},
+
+{
+q:"Which planet is known as the Red Planet?",
+a:["Earth","Mars","Venus","Saturn"],
+c:1
+}
+
+],
+
+
+5: [
+
+{
+q:"Which organ pumps blood around the body?",
+a:["Lungs","Heart","Stomach","Brain"],
+c:1
+},
+
+{
+q:"What gas do plants take in for photosynthesis?",
+a:["Oxygen","Nitrogen","Carbon dioxide","Helium"],
+c:2
+}
+
+],
+
+
+6: [
+
+{
+q:"What gas do humans need to breathe?",
+a:["Oxygen","Carbon dioxide","Helium","Hydrogen"],
+c:0
+},
+
+{
+q:"What is the center of our solar system?",
+a:["Earth","The Moon","The Sun","Mars"],
+c:2
+}
+
+],
+
+
+7: [
+
+{
+q:"What force pulls objects toward Earth?",
+a:["Magnetism","Gravity","Friction","Electricity"],
+c:1
+},
+
+{
+q:"What is H₂O?",
+a:["Oxygen","Water","Hydrogen","Salt"],
+c:1
+}
+
+],
+
+
+8: [
+
+{
+q:"Which organelle is known as the powerhouse of the cell?",
+a:["Nucleus","Ribosome","Mitochondrion","Cell wall"],
+c:2
+},
+
+{
+q:"Which type of energy is stored in food?",
+a:["Chemical","Sound","Light","Nuclear"],
+c:0
+}
+
+],
+
+
+9: [
+
+{
+q:"What is the basic unit of life?",
+a:["Atom","Cell","Organ","Tissue"],
+c:1
+},
+
+{
+q:"What particle has a negative charge?",
+a:["Proton","Neutron","Electron","Nucleus"],
+c:2
+}
+
+],
+
+
+10: [
+
+{
+q:"What is the chemical symbol for sodium?",
+a:["So","S","Na","Sd"],
+c:2
+},
+
+{
+q:"Which gas is most abundant in Earth's atmosphere?",
+a:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],
+c:1
+}
+
+]
+
+},
+
+
+
+// ==========================================
+// ENGLISH
+// ==========================================
+
+English: {
+
+
+1: [
+
+{
+q:"Which word is a color?",
+a:["Blue","Dog","Run","Apple"],
+c:0
+},
+
+{
+q:"Which word names an animal?",
+a:["Cat","Jump","Happy","Quickly"],
+c:0
+}
+
+],
+
+
+2: [
+
+{
+q:"Which word is a noun?",
+a:["Jump","Happy","School","Quickly"],
+c:2
+},
+
+{
+q:"Which word is a verb?",
+a:["Run","Blue","House","Happy"],
+c:0
+}
+
+],
+
+
+3: [
+
+{
+q:"Which word is the opposite of 'hot'?",
+a:["Warm","Cold","Big","Fast"],
+c:1
+},
+
+{
+q:"Which word is spelled correctly?",
+a:["Frend","Freind","Friend","Freindd"],
+c:2
+}
+
+],
+
+
+4: [
+
+{
+q:"Which sentence is written correctly?",
+a:[
+"she likes cats.",
+"She likes cats.",
+"she Likes Cats.",
+"She likes cats"
+],
+c:1
+},
+
+{
+q:"Which word is an adjective?",
+a:["Beautiful","Run","Quickly","School"],
+c:0
+}
+
+],
+
+
+5: [
+
+{
+q:"Which word is a synonym for 'happy'?",
+a:["Sad","Angry","Joyful","Tired"],
+c:2
+},
+
+{
+q:"Which word is an antonym for 'large'?",
+a:["Huge","Big","Small","Tall"],
+c:2
+}
+
+],
+
+
+6: [
+
+{
+q:"Which sentence uses a verb correctly?",
+a:[
+"She walk to school.",
+"She walks to school.",
+"She walking school.",
+"She walks school yesterday."
+],
+c:1
+},
+
+{
+q:"Which word is an adverb?",
+a:["Quickly","Blue","House","Run"],
+c:0
+}
+
+],
+
+
+7: [
+
+{
+q:"Which word is an adjective?",
+a:["Beautiful","Run","Quickly","School"],
+c:0
+},
+
+{
+q:"Which sentence uses correct punctuation?",
+a:[
+"Where are you.",
+"Where are you!",
+"Where are you?",
+"Where are you,"
+],
+c:2
+}
+
+],
+
+
+8: [
+
+{
+q:"Which sentence uses a metaphor?",
+a:[
+"The boy ran quickly.",
+"The classroom was a zoo.",
+"The dog barked loudly.",
+"She opened the door."
+],
+c:1
+},
+
+{
+q:"Which word is a conjunction?",
+a:["And","Quickly","Blue","Run"],
+c:0
+}
+
+],
+
+
+9: [
+
+{
+q:"Which sentence uses the past perfect tense?",
+a:[
+"She eats dinner.",
+"She was eating dinner.",
+"She had eaten dinner.",
+"She will eat dinner."
+],
+c:2
+},
+
+{
+q:"Which word is closest in meaning to 'enormous'?",
+a:["Tiny","Huge","Quiet","Simple"],
+c:1
+}
+
+],
+
+
+10: [
+
+{
+q:"Which sentence uses a semicolon correctly?",
+a:[
+"I studied hard; I passed the test.",
+"I studied; hard I passed the test.",
+"I; studied hard I passed.",
+"I studied hard I; passed the test."
+],
+c:0
+},
+
+{
+q:"Which sentence uses an example of personification?",
+a:[
+"The wind whispered through the trees.",
+"The dog ran across the yard.",
+"The student opened the book.",
+"The car is red."
+],
+c:0
+}
+
+]
+
+}
+
+};
+
+
+// ==========================================
+// QUIZ VARIABLES
+// ==========================================
+
+let currentGrade = 1;
+
+let currentSubject = "Math";
+
+let currentQuestion = 0;
+
+let quizScore = 0;
+
+let quizQuestions = [];
+
+
+// ==========================================
+// START QUIZ
+// ==========================================
+
+function startQuiz(subject) {
+
+    currentSubject = subject;
+
+    currentGrade =
+        Number(
+            document.getElementById("gradeSelect").value
+        );
+
+
+    currentQuestion = 0;
+
+    quizScore = 0;
+
+
+    quizQuestions =
+        questionDatabase[subject][currentGrade];
+
+
+    document.getElementById("quizSetup")
+        .style.display = "none";
+
+
+    document.getElementById("quizGame")
+        .style.display = "block";
+
+
+    document.getElementById("quizTitle")
+        .textContent =
+        subject + " • Grade " + currentGrade;
+
+
+    showQuestion();
+
+}
+
+
+// ==========================================
+// SHOW QUESTION
+// ==========================================
+
+function showQuestion() {
+
+    if (
+        currentQuestion >=
+        quizQuestions.length
+    ) {
+
+        finishQuiz();
+
+        return;
+
+    }
+
+
+    const q =
+        quizQuestions[currentQuestion];
+
+
+    document.getElementById("question")
+        .textContent = q.q;
+
+
+    document.getElementById("questionNumber")
+        .textContent =
+        (currentQuestion + 1)
+        + " / "
+        + quizQuestions.length;
+
+
+    for(let i = 0; i < 4; i++) {
+
+        const button =
+            document.getElementById(
+                "answer" + i
+            );
+
+
+        button.textContent =
+            q.a[i];
+
+
+        button.disabled = false;
+
+    }
+
+
+    document.getElementById("quizMessage")
+        .textContent = "";
+
+}
+
+
+// ==========================================
+// ANSWER QUESTION
+// ==========================================
+
+function answer(choice) {
+
+    const q =
+        quizQuestions[currentQuestion];
+
+
+    const buttons =
+        document.querySelectorAll(".answer");
+
+
+    buttons.forEach(button => {
+
+        button.disabled = true;
+
+    });
+
+
+    if(choice === q.c) {
+
+        quizScore++;
+
+
+        coins += 25;
+
+        xp += 20;
+
+
+        document.getElementById(
+            "quizMessage"
+        ).textContent =
+            "✅ Correct! +25 coins +20 XP";
+
+
+    } else {
+
+        document.getElementById(
+            "quizMessage"
+        ).textContent =
+            "❌ Wrong! Correct answer: "
+            + q.a[q.c];
+
+    }
+
+
+    updateUI();
+
+
+    currentQuestion++;
+
+
+    setTimeout(
+        showQuestion,
+        1200
+    );
+
+}
+
+
+// ==========================================
+// FINISH QUIZ
+// ==========================================
+
+function finishQuiz() {
+
+    games++;
+
+
+    updateUI();
+
+
+    document.getElementById(
+        "question"
+    ).textContent =
+        "🏆 Quiz Complete!";
+
+
+    document.getElementById(
+        "quizMessage"
+    ).innerHTML =
+        "You scored <strong>"
+        + quizScore
+        + " / "
+        + quizQuestions.length
+        + "</strong>! 🎉";
+
+
+    document.querySelector(
+        ".answers"
+    ).innerHTML = `
+
+        <button
+            class="play-button"
+            onclick="backToQuizSetup()">
+
+            🔄 Play Again
+
+        </button>
+
+    `;
+
+}
+
+
+// ==========================================
+// PLAY AGAIN
+// ==========================================
+
+function backToQuizSetup() {
+
+    document.getElementById(
+        "quizSetup"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "quizGame"
+    ).style.display = "none";
+
+
+    document.querySelector(
+        ".answers"
+    ).innerHTML = `
+
+        <button
+            class="answer"
+            onclick="answer(0)"
+            id="answer0">
+
+            Answer 1
+
+        </button>
+
+        <button
+            class="answer"
+            onclick="answer(1)"
+            id="answer1">
+
+            Answer 2
+
+        </button>
+
+        <button
+            class="answer"
+            onclick="answer(2)"
+            id="answer2">
+
+            Answer 3
+
+        </button>
+
+        <button
+            class="answer"
+            onclick="answer(3)"
+            id="answer3">
+
+            Answer 4
+
+        </button>
+
+    `;
+
+}
+
+
+// ==========================================
+// SHOP
+// ==========================================
+
+function buyChest(type) {
+
+    let cost;
+
+
+    if(type === "basic")
+        cost = 100;
+
+    if(type === "epic")
+        cost = 250;
+
+    if(type === "legend")
+        cost = 500;
+
+
+    if(coins < cost) {
+
+        alert(
+            "You don't have enough coins!"
+        );
+
+        return;
+
+    }
+
+
+    coins -= cost;
+
+    updateUI();
+
+    openChest(type);
+
+}
+
+
+// ==========================================
+// OPEN CHEST
+// ==========================================
+
+function openChest(type) {
+
+    const overlay =
+        document.getElementById(
+            "chestOverlay"
+        );
+
+
+    const opening =
+        document.getElementById(
+            "opening"
+        );
+
+
+    const reward =
+        document.getElementById(
+            "reward"
+        );
+
+
+    const chest =
+        document.getElementById(
+            "bigChest"
+        );
+
+
+    overlay.classList.add("show");
+
+
+    opening.style.display = "block";
+
+    reward.style.display = "none";
+
+
+    chest.classList.remove("flash");
+
+
+    setTimeout(() => {
+
+        chest.classList.add("flash");
+
+    },1800);
+
+
+    setTimeout(() => {
+
+        const skin =
+            getRandomSkin(type);
+
+
+        if(!owned.includes(skin.name)) {
+
+            owned.push(skin.name);
+
+            localStorage.setItem(
+                "qvOwned",
+                JSON.stringify(owned)
+            );
+
+        }
+
+
+        document.getElementById(
+            "rewardAvatar"
+        ).textContent =
+            skin.emoji;
+
+
+        document.getElementById(
+            "rewardName"
+        ).textContent =
+            skin.name;
+
+
+        document.getElementById(
+            "rewardRarity"
+        ).textContent =
+            "✨ "
+            + skin.rarity.toUpperCase()
+            + " ✨";
+
+
+        document.getElementById(
+            "rewardRarity"
+        ).className =
+            "reward-rarity "
+            + skin.rarity.toLowerCase();
+
+
+        opening.style.display =
+            "none";
+
+
+        reward.style.display =
+            "block";
+
+
+        updateUI();
+
+    },3300);
+
+}
+
+
+// ==========================================
+// RANDOM SKIN
+// ==========================================
+
+function getRandomSkin(type) {
+
+    let pool;
+
+
+    if(type === "basic") {
+
+        pool =
+            skins.filter(
+                s =>
+                    [
+                        "Common",
+                        "Rare",
+                        "Epic"
+                    ].includes(s.rarity)
+            );
+
+    }
+
+
+    if(type === "epic") {
+
+        pool =
+            skins.filter(
+                s =>
+                    [
+                        "Rare",
+                        "Epic",
+                        "Legendary"
+                    ].includes(s.rarity)
+            );
+
+    }
+
+
+    if(type === "legend") {
+
+        pool =
+            skins.filter(
+                s =>
+                    [
+                        "Epic",
+                        "Legendary",
+                        "Mythic"
+                    ].includes(s.rarity)
+            );
+
+    }
+
+
+    const newSkins =
+        pool.filter(
+            s =>
+                !owned.includes(s.name)
+        );
+
+
+    if(newSkins.length > 0) {
+
+        pool = newSkins;
+
+    }
+
+
+    return pool[
+        Math.floor(
+            Math.random() * pool.length
+        )
+    ];
+
+}
+
+
+// ==========================================
+// CLOSE CHEST
+// ==========================================
+
+function closeChest() {
+
+    document.getElementById(
+        "chestOverlay"
+    ).classList.remove("show");
+
+
+    renderAvatars();
+
+}
+
+
+// ==========================================
+// AVATAR DISPLAY
+// ==========================================
+
+function renderAvatars() {
+
+    const grid =
+        document.getElementById(
+            "avatarGrid"
+        );
+
+
+    grid.innerHTML = "";
+
+
+    skins.forEach(skin => {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "avatar-card";
+
+
+        const isOwned =
+            owned.includes(
+                skin.name
+            );
+
+
+        const isSelected =
+            selected === skin.name;
+
+
+        card.innerHTML = `
+
+            <div class="avatar-big">
+                ${skin.emoji}
+            </div>
+
+            <h3>
+                ${skin.name}
+            </h3>
+
+            <div
+                class="rarity ${skin.rarity.toLowerCase()}">
+
+                ${skin.rarity}
+
+            </div>
+
+            ${
+                isOwned
+
+                ?
+
+                `
+                <button
+                    onclick="selectSkin('${skin.name}')">
+
+                    ${
+                        isSelected
+                        ? "✅ Equipped"
+                        : "⭐ Equip"
+                    }
+
+                </button>
+                `
+
+                :
+
+                `
+                <div style="color:#777">
+                    🔒 Locked
+                </div>
+                `
+            }
+
+        `;
+
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+
+// ==========================================
+// SELECT AVATAR
+// ==========================================
+
+function selectSkin(name) {
+
+    selected = name;
+
+
+    localStorage.setItem(
+        "qvSelected",
+        selected
+    );
+
+
+    updateUI();
+
+    renderAvatars();
+
+}
+
+
+// ==========================================
+// LOAD GAME
+// ==========================================
+
+updateUI();
+
+renderAvatars();
+
+</script>
+
+</body>
+</html>
